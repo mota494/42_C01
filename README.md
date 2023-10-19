@@ -1,2 +1,3 @@
-# 42_C01
-Every exercise of the C Piscine C01, made in Piscine #6 of the 42 Porto 
+<div align="center">
+  <h1>C01</h1>
+</div>
