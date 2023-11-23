@@ -22,14 +22,38 @@ int main()
 	printf("Tamanho da string: %d", cont);
 	return (0);
 }*/
-int	ft_strlen(char *str)
+int fixI(int i)
 {
-	int	i;
+	if(i <= 0)
+		return (0);
+	else
+		return (i);
+}
 
-	i = 0;
-	while (str[i] != '\0')
-	{
+int ft_checkI(int i)
+{
+	if(i > 0)
+		return (i);
+	else
+		return (fixI(i));
+}
+
+int checkstr(char *str)
+{
+	if(!str)
+		return (0);
+	return (1);
+}
+
+int 	ft_strlen(char *str)
+{
+	int i = 0;
+	int checks = 0;
+
+	if(checkstr(str) == 1)
+		checks = 1;
+	while(str[i] != '\0' && checks == 1)
 		i++;
-	}
-	return (i); 
+	i = ft_checkI(i);
+	return (i);
 }
