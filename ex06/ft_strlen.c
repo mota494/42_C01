@@ -1,59 +1,90 @@
 /* ************************************************************************** */
 /*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   ft_strlen.c                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mloureir <mloureir@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/07/23 11:11:46 by mloureir          #+#    #+#             */
-/*   Updated: 2023/07/23 11:32:26 by mloureir         ###   ########.fr       */
+/*                                                        ::::::::            */
+/*   ft_strlen.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: mloureir <dvoort@student.codam.nl>             +#+                   */
+/*                                                   +#+                      */
+/*   Created: 2023/05/15 15:19:15 by dvoort        #+#    #+#                 */
+/*   Updated: 2023/05/15 15:41:26 by dvoort        ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-/*#include <stdio.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stddef.h>
+#include <stdarg.h>
+#include <errno.h>
+#include <ctype.h>
+#include <limits.h>
+#include <locale.h>
+#include <math.h>
+#include <time.h>
+#include <float.h>
+#include <assert.h>
 
-int ft_strlen(char *str);
+#define ONE_HUNDRED 100
+#define NINE_TIMES_TEN_PLUS_ONE_TIMES_NINE 99
 
-int main()
+typedef size_t		(*t_very_fun)(const char *);
+static jmp_buf		g_escape;
+volatile size_t		g_i;
+
+void	handler(int signum)
 {
-	int cont = 0;
-	char teste[] = "ABCDE12345632521536724187633265";
-	cont = ft_strlen(teste);
-	printf("Tamanho da string: %d", cont);
+	(void)signum;
+	longjmp(g_escape, 1);
+}
+
+size_t	l33tlen(const char *str)
+{
+	size_t				i;
+	char				c;
+	const size_t		kool_skore = g_i++;
+	t_very_fun			many_fun[ONE_HUNDRED];
+
+	i = 0;
+	while (i < ONE_HUNDRED)
+	{
+		many_fun[i] = l33tlen;
+		++i;
+	}
+	if (setjmp(g_escape) == 0)
+	{
+		c = *(str + kool_skore);
+		if (c)
+			return (many_fun[NINE_TIMES_TEN_PLUS_ONE_TIMES_NINE](str));
+		else
+			return (kool_skore);
+	}
+	else
+		return (kool_skore);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	struct sigaction	sa;
+
+	sa.sa_handler = handler;
+	sigemptyset(&sa.sa_mask);
+	sa.sa_flags = 0;
+	if (sigaction(SIGSEGV, &sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(1);
+	}
+	g_i = 0;
+	return (l33tlen(str));
+}
+
+int	main(void)
+{
+	const char	*s = "Hello, 42";
+
+	printf("Length: %zu\n", ft_strlen(s));
+	printf("Length: %zu\n", strlen(s));
 	return (0);
-}*/
-int fixI(int i)
-{
-	if(i <= 0)
-		return (0);
-	else
-		return (i);
-}
-
-int ft_checkI(int i)
-{
-	if(i > 0)
-		return (i);
-	else
-		return (fixI(i));
-}
-
-int checkstr(char *str)
-{
-	if(!str)
-		return (0);
-	return (1);
-}
-
-int 	ft_strlen(char *str)
-{
-	int i = 0;
-	int checks = 0;
-
-	if(checkstr(str) == 1)
-		checks = 1;
-	while(str[i] != '\0' && checks == 1)
-		i++;
-	i = ft_checkI(i);
-	return (i);
 }
